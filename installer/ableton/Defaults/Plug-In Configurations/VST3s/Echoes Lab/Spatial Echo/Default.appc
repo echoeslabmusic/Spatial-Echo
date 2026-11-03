@@ -1,0 +1,78 @@
+{
+    "id": "application/vnd.ableton.plugin-configuration",
+    "version": "1.0",
+    "device-id": "device:vst3:audiofx:abcdef01-9182-faeb-4563-684c53704563?n=Spatial%20Echo",
+    "mpe-enabled": false,
+    "mpe-settings": {
+        "zone-type": 0,
+        "first-note-channel": 1,
+        "last-note-channel": 15
+    },
+    "groups": [
+        {
+            "name": "Default",
+            "parameters": [
+                {
+                    "name": "Mix",
+                    "id": 77372,
+                    "x-slot": 0,
+                    "y-slot": 0
+                },
+                {
+                    "name": "Feedback",
+                    "id": 355809299,
+                    "x-slot": 0,
+                    "y-slot": 1
+                },
+                {
+                    "name": "Echo Level",
+                    "id": 1641476159,
+                    "x-slot": 0,
+                    "y-slot": 2
+                },
+                {
+                    "name": "Reverb Level",
+                    "id": 532462770,
+                    "x-slot": 0,
+                    "y-slot": 3
+                },
+                {
+                    "name": "Decay",
+                    "id": 525056232,
+                    "x-slot": 1,
+                    "y-slot": 0
+                },
+                {
+                    "name": "Tone",
+                    "id": 1195076228,
+                    "x-slot": 1,
+                    "y-slot": 1
+                },
+                {
+                    "name": "Source Width",
+                    "id": 1439034087,
+                    "x-slot": 1,
+                    "y-slot": 2
+                },
+                {
+                    "name": "Spatial Pattern",
+                    "id": 1565115916,
+                    "x-slot": 1,
+                    "y-slot": 3
+                },
+                {
+                    "name": "Spatial Rate",
+                    "id": 1145758692,
+                    "x-slot": 2,
+                    "y-slot": 0
+                },
+                {
+                    "name": "Spatial Depth",
+                    "id": 1145967679,
+                    "x-slot": 2,
+                    "y-slot": 1
+                }
+            ]
+        }
+    ]
+}

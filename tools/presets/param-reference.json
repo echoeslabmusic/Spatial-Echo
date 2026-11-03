@@ -1,0 +1,846 @@
+{
+ "schema": "spatial-echo.voicing-param-reference.v2",
+ "order": [
+  "PreampPreset",
+  "InputLevel",
+  "Bass",
+  "Treble",
+  "DelaySetting",
+  "RepeatRate",
+  "TempoSync",
+  "Head1NoteDivision",
+  "Head2NoteDivision",
+  "Head3NoteDivision",
+  "HeadRatioPreset",
+  "Intensity",
+  "EchoSend",
+  "Power",
+  "PingPong",
+  "ReverbSize",
+  "ReverbDecay",
+  "ReverbTone",
+  "ReverbMod",
+  "ReverbCharacter",
+  "ReverbPreDelay",
+  "ReverbWidth",
+  "ReverbRouting",
+  "ReverbEngine",
+  "Mix",
+  "EchoLevel",
+  "ReverbLevel",
+  "OutputGain",
+  "MixLock",
+  "OutputProtection",
+  "FeedbackCompensation",
+  "TapeDrive",
+  "TapeFlavor",
+  "SpatialEnabled",
+  "SpatialAzimuth",
+  "SpatialElevation",
+  "SpatialDistance",
+  "SpatialLockAzimuth",
+  "SpatialLockDistance",
+  "SpatialLockElevation",
+  "SpatialMix",
+  "SpatialCrossover",
+  "SpatialQuality",
+  "SpatialSourceWidth",
+  "SpatialRouting",
+  "HeadPositionMode",
+  "Head1Azimuth",
+  "Head1Elevation",
+  "Head1Distance",
+  "Head2Azimuth",
+  "Head2Elevation",
+  "Head2Distance",
+  "Head3Azimuth",
+  "Head3Elevation",
+  "Head3Distance",
+  "SpatialPattern",
+  "SpatialRate",
+  "SpatialSync",
+  "SpatialDivision",
+  "SpatialDepth",
+  "SpatialRestart",
+  "SpatialChoreography",
+  "SpatialSpread",
+  "ReverbDuckAmount"
+ ],
+ "params": {
+  "PreampPreset": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Clean",
+    "Warm",
+    "Bright",
+    "Drive",
+    "Lo-Fi",
+    "Custom"
+   ],
+   "unit": null,
+   "name": "Preamp Preset"
+  },
+  "InputLevel": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Input Level"
+  },
+  "Bass": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Bass"
+  },
+  "Treble": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Treble"
+  },
+  "DelaySetting": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "H1 Echo",
+    "H2 Echo",
+    "H3 Echo",
+    "H2+H3 Echo",
+    "H1 Echo+Reverb",
+    "H2 Echo+Reverb",
+    "H3 Echo+Reverb",
+    "H1+H2 Echo+Reverb",
+    "H2+H3 Echo+Reverb",
+    "H1+H3 Echo+Reverb",
+    "All Heads Echo+Reverb",
+    "Reverb Only"
+   ],
+   "unit": null,
+   "name": "Mode"
+  },
+  "RepeatRate": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Repeat Rate"
+  },
+  "TempoSync": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Tempo Sync"
+  },
+  "Head1NoteDivision": {
+   "type": "choice",
+   "default": 2,
+   "range": null,
+   "choices": [
+    "1/1",
+    "1/2",
+    "1/4",
+    "1/8",
+    "1/16",
+    "1/32",
+    "1/64",
+    "1/2T",
+    "1/4T",
+    "1/8T",
+    "1/16T",
+    "1/32T",
+    "1/2D",
+    "1/4D",
+    "1/8D",
+    "1/16D",
+    "1/32D"
+   ],
+   "unit": null,
+   "name": "Head 1 Division"
+  },
+  "Head2NoteDivision": {
+   "type": "choice",
+   "default": 3,
+   "range": null,
+   "choices": [
+    "1/1",
+    "1/2",
+    "1/4",
+    "1/8",
+    "1/16",
+    "1/32",
+    "1/64",
+    "1/2T",
+    "1/4T",
+    "1/8T",
+    "1/16T",
+    "1/32T",
+    "1/2D",
+    "1/4D",
+    "1/8D",
+    "1/16D",
+    "1/32D"
+   ],
+   "unit": null,
+   "name": "Head 2 Division"
+  },
+  "Head3NoteDivision": {
+   "type": "choice",
+   "default": 4,
+   "range": null,
+   "choices": [
+    "1/1",
+    "1/2",
+    "1/4",
+    "1/8",
+    "1/16",
+    "1/32",
+    "1/64",
+    "1/2T",
+    "1/4T",
+    "1/8T",
+    "1/16T",
+    "1/32T",
+    "1/2D",
+    "1/4D",
+    "1/8D",
+    "1/16D",
+    "1/32D"
+   ],
+   "unit": null,
+   "name": "Head 3 Division"
+  },
+  "HeadRatioPreset": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Classic (1:1.9:2.75)",
+    "Idealized (1:2:3)",
+    "Golden Ratio (1:1.62:2.62)",
+    "Linear (1:1.5:2)"
+   ],
+   "unit": null,
+   "name": "Head Ratio Preset"
+  },
+  "Intensity": {
+   "type": "float",
+   "default": 0.4,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Feedback"
+  },
+  "EchoSend": {
+   "type": "bool",
+   "default": true,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Dub Switch"
+  },
+  "Power": {
+   "type": "bool",
+   "default": true,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Power"
+  },
+  "PingPong": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Ping Pong"
+  },
+  "ReverbSize": {
+   "type": "float",
+   "default": 0.7085,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Size"
+  },
+  "ReverbDecay": {
+   "type": "float",
+   "default": 0.6802,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Decay"
+  },
+  "ReverbTone": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Tone"
+  },
+  "ReverbMod": {
+   "type": "float",
+   "default": 0.08,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Mod"
+  },
+  "ReverbCharacter": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Character"
+  },
+  "ReverbPreDelay": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Pre-Delay"
+  },
+  "ReverbWidth": {
+   "type": "float",
+   "default": 0.4,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Width"
+  },
+  "ReverbRouting": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Parallel",
+    "Echo → Reverb",
+    "Reverb → Echo"
+   ],
+   "unit": null,
+   "name": "Routing"
+  },
+  "ReverbEngine": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Spring",
+    "Cloud"
+   ],
+   "unit": null,
+   "name": "Engine"
+  },
+  "Mix": {
+   "type": "float",
+   "default": 0.37,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Mix"
+  },
+  "EchoLevel": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 0.1,
+    "max": 12.0,
+    "min": -12.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Echo Level"
+  },
+  "ReverbLevel": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 0.1,
+    "max": 12.0,
+    "min": -12.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Reverb Level"
+  },
+  "OutputGain": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Output"
+  },
+  "MixLock": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Mix Lock"
+  },
+  "OutputProtection": {
+   "type": "bool",
+   "default": true,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Output Protection"
+  },
+  "FeedbackCompensation": {
+   "type": "bool",
+   "default": true,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Feedback Compensation"
+  },
+  "TapeDrive": {
+   "type": "float",
+   "default": 0.45,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Drive"
+  },
+  "TapeFlavor": {
+   "type": "choice",
+   "default": 1,
+   "range": null,
+   "choices": [
+    "CLEAN",
+    "WARM",
+    "HOT",
+    "CASSETTE",
+    "WORN"
+   ],
+   "unit": null,
+   "name": "Tape Flavor"
+  },
+  "SpatialEnabled": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Enable 3D"
+  },
+  "SpatialAzimuth": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 1.0,
+    "max": 180.0,
+    "min": -180.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Azimuth"
+  },
+  "SpatialElevation": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 1.0,
+    "max": 90.0,
+    "min": -90.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Elevation"
+  },
+  "SpatialDistance": {
+   "type": "float",
+   "default": 1.0,
+   "range": {
+    "interval": 0.01,
+    "max": 10.0,
+    "min": 0.1
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Distance"
+  },
+  "SpatialLockAzimuth": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Azimuth Lock"
+  },
+  "SpatialLockDistance": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Distance Lock"
+  },
+  "SpatialLockElevation": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "Elevation Lock"
+  },
+  "SpatialMix": {
+   "type": "float",
+   "default": 100.0,
+   "range": {
+    "max": 100.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "3D Wet Mix"
+  },
+  "SpatialCrossover": {
+   "type": "float",
+   "default": 150.0,
+   "range": {
+    "interval": 1.0,
+    "max": 500.0,
+    "min": 20.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "3D Crossover"
+  },
+  "SpatialQuality": {
+   "type": "choice",
+   "default": 2,
+   "range": null,
+   "choices": [
+    "Performance",
+    "Balanced",
+    "Max"
+   ],
+   "unit": null,
+   "name": "3D Quality"
+  },
+  "SpatialSourceWidth": {
+   "type": "float",
+   "default": 0.5,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "3D Width"
+  },
+  "SpatialRouting": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "After Effects",
+    "Before Effects"
+   ],
+   "unit": null,
+   "name": "Spatial Routing"
+  },
+  "HeadPositionMode": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Linked",
+    "Independent"
+   ],
+   "unit": null,
+   "name": "Head Position Mode"
+  },
+  "Head1Azimuth": {
+   "type": "float",
+   "default": -60.0,
+   "range": {
+    "interval": 1.0,
+    "max": 180.0,
+    "min": -180.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 1 Azimuth"
+  },
+  "Head1Elevation": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 1.0,
+    "max": 90.0,
+    "min": -90.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 1 Elevation"
+  },
+  "Head1Distance": {
+   "type": "float",
+   "default": 1.0,
+   "range": {
+    "interval": 0.01,
+    "max": 10.0,
+    "min": 0.1
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 1 Distance"
+  },
+  "Head2Azimuth": {
+   "type": "float",
+   "default": 60.0,
+   "range": {
+    "interval": 1.0,
+    "max": 180.0,
+    "min": -180.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 2 Azimuth"
+  },
+  "Head2Elevation": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 1.0,
+    "max": 90.0,
+    "min": -90.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 2 Elevation"
+  },
+  "Head2Distance": {
+   "type": "float",
+   "default": 1.0,
+   "range": {
+    "interval": 0.01,
+    "max": 10.0,
+    "min": 0.1
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 2 Distance"
+  },
+  "Head3Azimuth": {
+   "type": "float",
+   "default": 180.0,
+   "range": {
+    "interval": 1.0,
+    "max": 180.0,
+    "min": -180.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 3 Azimuth"
+  },
+  "Head3Elevation": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 1.0,
+    "max": 90.0,
+    "min": -90.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 3 Elevation"
+  },
+  "Head3Distance": {
+   "type": "float",
+   "default": 1.2,
+   "range": {
+    "interval": 0.01,
+    "max": 10.0,
+    "min": 0.1
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Head 3 Distance"
+  },
+  "SpatialPattern": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Still",
+    "Orbit",
+    "Pendulum",
+    "Figure-8",
+    "Breathe",
+    "Wander"
+   ],
+   "unit": null,
+   "name": "PATTERN"
+  },
+  "SpatialRate": {
+   "type": "float",
+   "default": 0.35,
+   "range": {
+    "interval": 0.01,
+    "max": 8.0,
+    "min": 0.01,
+    "skew_centre": 0.28
+   },
+   "choices": null,
+   "unit": null,
+   "name": "RATE"
+  },
+  "SpatialSync": {
+   "type": "bool",
+   "default": false,
+   "range": null,
+   "choices": null,
+   "unit": null,
+   "name": "SYNC"
+  },
+  "SpatialDivision": {
+   "type": "choice",
+   "default": 3,
+   "range": null,
+   "choices": [
+    "1/1",
+    "1/2",
+    "1/4",
+    "1/8",
+    "1/16",
+    "1/32",
+    "1/64",
+    "1/2T",
+    "1/4T",
+    "1/8T",
+    "1/16T",
+    "1/32T",
+    "1/2D",
+    "1/4D",
+    "1/8D",
+    "1/16D",
+    "1/32D"
+   ],
+   "unit": null,
+   "name": "DIV"
+  },
+  "SpatialDepth": {
+   "type": "float",
+   "default": 45.0,
+   "range": {
+    "interval": 0.1,
+    "max": 100.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "DEPTH"
+  },
+  "SpatialRestart": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Free",
+    "Transport",
+    "Note",
+    "Random"
+   ],
+   "unit": null,
+   "name": "RETRIG"
+  },
+  "SpatialChoreography": {
+   "type": "choice",
+   "default": 0,
+   "range": null,
+   "choices": [
+    "Unison",
+    "Constellation",
+    "Cascade"
+   ],
+   "unit": null,
+   "name": "CHOREO"
+  },
+  "SpatialSpread": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "interval": 0.1,
+    "max": 100.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "SPREAD"
+  },
+  "ReverbDuckAmount": {
+   "type": "float",
+   "default": 0.0,
+   "range": {
+    "max": 1.0,
+    "min": 0.0
+   },
+   "choices": null,
+   "unit": null,
+   "name": "Ducking"
+  }
+ }
+}

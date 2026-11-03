@@ -1,0 +1,41 @@
+# Spatial Echo C++ style. Apply with scripts/format_sources.sh.
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: c++17
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
+AlignTrailingComments: true
+AlignOperands: Align
+AlignAfterOpenBracket: Align
+BinPackArguments: true
+BinPackParameters: true
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: Never
+BreakTemplateDeclarations: Yes
+PointerAlignment: Left
+ReferenceAlignment: Left
+SortIncludes: Never
+SpaceBeforeParens: ControlStatements
+SpacesBeforeTrailingComments: 2
+IndentCaseLabels: true
+NamespaceIndentation: None
+FixNamespaceComments: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+Cpp11BracedListStyle: true
+
+# Never split string literals: tools/presets/parameter_manifest.py parses the
+# parameter table in PluginProcessor.cpp and SpatialParamIDs.h.
+BreakStringLiterals: false
+# Keep comment lines as written; file headers are one field per line.
+ReflowComments: Never

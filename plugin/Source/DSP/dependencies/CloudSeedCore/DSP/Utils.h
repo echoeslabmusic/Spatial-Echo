@@ -1,0 +1,188 @@
+/*
+Copyright (c) 2024 Ghost Note Engineering Ltd
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+#pragma once
+
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES 1
+#endif
+#include <cmath>
+#include <cstring>
+#include <stdint.h>
+
+namespace Cloudseed
+{
+    // [Spatial Echo] Delay-buffer capacity policy.
+    //
+    // Upstream CloudSeed sized every delay buffer at compile time for the
+    // worst case it could imagine (1 s at 192 kHz, doubled). Spatial Echo runs
+    // the engine at 2x the host rate, so a 176.4 or 192 kHz host drives it at
+    // 352.8 / 384 kHz, where those fixed buffers are SHORTER than the longest
+    // delay the parameter laws can request. Measured on the pre-change code at
+    // a 192 kHz host with Size = 1.0: 8 of the 12 late lines were clamped to
+    // the same 999.99 ms instead of their requested 1066 - 1460 ms, collapsing
+    // the tank's decorrelation onto a single period.
+    //
+    // The buffers are now sized from the engine sample rate at prepare time.
+    // The constants below are the longest value each vendored parameter law in
+    // Parameters.h::ScaleParam can ask a single element for, in seconds:
+    //
+    //   TapPredelay             Resp1dec(1) * 500 ms                = 0.5 s
+    //   TapLength               10 + 990 ms                         = 1.0 s
+    //   LateLineSize            20 + 980 ms                         = 1.0 s,
+    //       then ReverbChannel::UpdateLines scales by (0.5 + seed), seed < 1  => 1.5 s
+    //   Early/LateDiffuseDelay  10 + 90 ms                          = 0.1 s,
+    //       then AllpassDiffuser::Update scales by 10^seed * 0.1 <= 1.0
+    //   *ModAmount              val * 2.5 ms,
+    //       then AllpassDiffuser::SetModAmount scales by up to 1.15 => 0.004 s
+    //
+    // Each element keeps a runtime clamp as a backstop. With these capacities
+    // the clamp can no longer engage in normal operation; it exists so a caller
+    // that drives a parameter outside the vendored range still cannot read out
+    // of bounds.
+    namespace Capacity
+    {
+        constexpr double kMaxPreDelaySeconds     = 0.5;
+        constexpr double kMaxTapLengthSeconds    = 1.0;
+        constexpr double kMaxLineDelaySeconds    = 1.5;
+        constexpr double kMaxAllpassDelaySeconds = 0.1;
+        constexpr double kMaxModAmountSeconds    = 0.004;
+        constexpr int    kGuardSamples           = 8;
+
+        inline int Samples(int samplerate, double seconds)
+        {
+            if (samplerate < 1) samplerate = 1;
+            const double n = std::ceil(static_cast<double>(samplerate) * seconds);
+            return static_cast<int>(n) + kGuardSamples;
+        }
+
+        inline int PreDelaySamples(int samplerate)
+        { return Samples(samplerate, kMaxPreDelaySeconds + kMaxModAmountSeconds); }
+
+        inline int MultitapSamples(int samplerate)
+        { return Samples(samplerate, kMaxTapLengthSeconds); }
+
+        inline int LateLineSamples(int samplerate)
+        { return Samples(samplerate, kMaxLineDelaySeconds + kMaxModAmountSeconds); }
+
+        inline int AllpassSamples(int samplerate)
+        { return Samples(samplerate, kMaxAllpassDelaySeconds + kMaxModAmountSeconds); }
+    }
+
+    namespace Utils
+    {
+        template<typename T>
+        inline void ZeroBuffer(T* buffer, int len)
+        {
+            for (int i = 0; i < len; i++)
+                buffer[i] = 0;
+        }
+
+        template<typename T>
+        inline void Copy(T* dest, T* source, int len)
+        {
+            memcpy(dest, source, len * sizeof(T));
+        }
+
+        template<typename T>
+        inline void Gain(T* buffer, T gain, int len)
+        {
+            for (int i = 0; i < len; i++)
+            {
+                buffer[i] *= gain;
+            }
+        }
+
+        template<typename T>
+        inline void Mix(T* target, T* source, T gain, int len)
+        {
+            for (int i = 0; i < len; i++)
+                target[i] += source[i] * gain;
+        }
+
+        inline float DB2Gainf(float input)
+        {
+            //return std::pow(10.0f, input / 20.0f);
+            return powf(10, input * 0.05f);
+        }
+
+        template<typename T>
+        inline double DB2Gain(T input)
+        {
+            return pow(10.0, input / 20.0);
+        }
+
+        template<typename T>
+        inline double Gain2DB(T input)
+        {
+            //if (input < 0.0000001)
+            //    return -100000;
+
+            return 20.0f * log10f(input);
+        }
+
+        const float dec1Mult = (10 / 9.0f) * 0.1f;
+        const float dec2Mult = (100 / 99.0f) * 0.01f;
+        const float dec3Mult = (1000 / 999.0f) * 0.001f;
+        const float dec4Mult = (10000 / 9999.0f) * 0.0001f;
+
+        const float oct1Mult = (2 / 1.0f) * 0.5f;
+        const float oct2Mult = (4 / 3.0f) * 0.25f;
+        const float oct3Mult = (8 / 7.0f) * 0.125f;
+        const float oct4Mult = (16 / 15.0f) * 0.0625f;
+        const float oct5Mult = (32 / 31.0f) * 0.03125f;
+        const float oct6Mult = (64 / 63.0f) * 0.015625f;
+        const float oct7Mult = (128 / 127.0f) * 0.0078125f;
+        const float oct8Mult = (256 / 255.0f) * 0.00390625f;
+
+        // Hermite cubic interpolation for fractional delay reads.
+        // 4-point, 3rd-order; much flatter magnitude response than linear
+        // interpolation, critical for quality inside feedback loops.
+        //   xm1 = sample at (intDelay - 1)
+        //   x0  = sample at (intDelay)
+        //   x1  = sample at (intDelay + 1)
+        //   x2  = sample at (intDelay + 2)
+        //   frac = fractional part (0..1) between x0 and x1
+        inline float HermiteInterp(float frac, float xm1, float x0, float x1, float x2)
+        {
+            float c1 = 0.5f * (x1 - xm1);
+            float c2 = xm1 - 2.5f * x0 + 2.0f * x1 - 0.5f * x2;
+            float c3 = 0.5f * (x2 - xm1) + 1.5f * (x0 - x1);
+            return ((c3 * frac + c2) * frac + c1) * frac + x0;
+        }
+
+        inline float Resp1dec(float x) { return (powf(10, x) - 1) * dec1Mult; }
+        inline float Resp2dec(float x) { return (powf(10, 2 * x) - 1) * dec2Mult; }
+        inline float Resp3dec(float x) { return (powf(10, 3 * x) - 1) * dec3Mult; }
+        inline float Resp4dec(float x) { return (powf(10, 4 * x) - 1) * dec4Mult; }
+
+        inline float Resp1oct(float x) { return (powf(2, x) - 1) * oct1Mult; }
+        inline float Resp2oct(float x) { return (powf(2, 2 * x) - 1) * oct2Mult; }
+        inline float Resp3oct(float x) { return (powf(2, 3 * x) - 1) * oct3Mult; }
+        inline float Resp4oct(float x) { return (powf(2, 4 * x) - 1) * oct4Mult; }
+        inline float Resp5oct(float x) { return (powf(2, 5 * x) - 1) * oct5Mult; }
+        inline float Resp6oct(float x) { return (powf(2, 6 * x) - 1) * oct6Mult; }
+        inline float Resp7oct(float x) { return (powf(2, 7 * x) - 1) * oct7Mult; }
+        inline float Resp8oct(float x) { return (powf(2, 8 * x) - 1) * oct8Mult; }
+       
+    }
+}

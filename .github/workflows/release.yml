@@ -1,0 +1,363 @@
+# Manual release pipeline. Never runs on push.
+#
+#   mode=windows-check  Windows build + automated checks only
+#   mode=release        macOS universal + Intel checks + Windows, then a draft
+#                       GitHub Release (tag v<version>) with both installers and
+#                       their checksums attached. Publishing the draft is manual.
+#
+# Jobs cache JUCE, the VST3 validator and Windows compiler output to keep run
+# time down. The validator-tools cache key follows scripts/release_validators.sh,
+# which pins the pluginval release (with SHA-256) and the VST3 SDK tag.
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: What to run
+        type: choice
+        options: [windows-check, release]
+        default: windows-check
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  RENDER_REFERENCE: tools/render-reference/preset_metrics_macos_arm64.json
+
+jobs:
+  macos:
+    if: inputs.mode == 'release'
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JUCE revision
+        id: juce
+        run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache JUCE
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/JUCE
+          key: juce-${{ steps.juce.outputs.rev }}
+
+      - name: Fetch JUCE
+        run: |
+          if [ ! -d "$RUNNER_TEMP/JUCE/.git" ]; then
+            git clone --filter=blob:none https://github.com/juce-framework/JUCE.git "$RUNNER_TEMP/JUCE"
+          fi
+          git -C "$RUNNER_TEMP/JUCE" checkout --quiet "${{ steps.juce.outputs.rev }}"
+
+      - name: Build universal plug-ins and installer
+        env:
+          JUCE_DIR: ${{ runner.temp }}/JUCE
+        run: ./scripts/create_installer_mac.sh --skip-sign
+
+      - name: Install to user scope and run strict auval
+        run: |
+          ./scripts/install_macos_plugins.sh --format all
+          killall -9 AudioComponentRegistrar 2>/dev/null || true
+          auval -strict -v aufx SpEc EchL
+
+      - name: Build host check (universal)
+        run: |
+          cmake -S . -B build/cmake/hostcheck -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DSPATIAL_ECHO_FORMATS=Standalone \
+            -DSPATIAL_ECHO_BUILD_HEADLESS=OFF -DSPATIAL_ECHO_BUILD_HOST_CHECK=ON \
+            -DSPATIAL_ECHO_JUCE_DIR="$RUNNER_TEMP/JUCE"
+          cmake --build build/cmake/hostcheck --target SpatialEchoHostCheck -j 4
+          cp build/cmake/hostcheck/SpatialEchoHostCheck_artefacts/Release/SpatialEchoHostCheck build/SpatialEchoHostCheck
+
+      - name: Cache validator tools
+        uses: actions/cache@v4
+        with:
+          path: build/tools
+          key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
+
+      - name: Validators
+        run: |
+          mkdir -p build/reports
+          ./scripts/release_validators.sh macos build/reports \
+            "$HOME/Library/Audio/Plug-Ins/VST3/Spatial-Echo.vst3" \
+            "$HOME/Library/Audio/Plug-Ins/Components/Spatial-Echo.component"
+
+      - name: Bundle artifacts for the Intel job
+        run: |
+          tar -C "$HOME/Library/Audio/Plug-Ins" -czf build/plugins-macos.tgz VST3/Spatial-Echo.vst3 Components/Spatial-Echo.component
+          tar -C build -czf build/hostcheck-macos.tgz SpatialEchoHostCheck
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-installer
+          path: |
+            build/release_packages/Spatial-Echo-v*-mac-unsigned.zip
+            build/release_packages/Spatial-Echo-v*-mac.pkg
+            build/release_packages/Spatial-Echo-v*-mac.pkg.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-bundles
+          path: |
+            build/plugins-macos.tgz
+            build/hostcheck-macos.tgz
+          retention-days: 3
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-reports
+          path: build/reports
+
+  macos-intel:
+    needs: macos
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-bundles
+          path: build
+
+      - name: Install the universal bundles to user scope
+        run: |
+          mkdir -p "$HOME/Library/Audio/Plug-Ins"
+          tar -C "$HOME/Library/Audio/Plug-Ins" -xzf build/plugins-macos.tgz
+          tar -C build -xzf build/hostcheck-macos.tgz
+          test "$(uname -m)" = x86_64
+          killall -9 AudioComponentRegistrar 2>/dev/null || true
+          auval -strict -v aufx SpEc EchL
+
+      - name: Cache validator tools
+        uses: actions/cache@v4
+        with:
+          path: build/tools
+          key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
+
+      - name: Validators (native Intel)
+        run: |
+          mkdir -p build/reports
+          ./scripts/release_validators.sh macos build/reports \
+            "$HOME/Library/Audio/Plug-Ins/VST3/Spatial-Echo.vst3" \
+            "$HOME/Library/Audio/Plug-Ins/Components/Spatial-Echo.component"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-intel-reports
+          path: build/reports
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        with:
+          arch: x64
+
+      - uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+
+      - name: JUCE revision
+        id: juce
+        shell: bash
+        run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache JUCE
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/JUCE
+          key: juce-windows-${{ steps.juce.outputs.rev }}
+
+      - name: Fetch JUCE
+        shell: bash
+        run: |
+          if [ ! -d "$RUNNER_TEMP/JUCE/.git" ]; then
+            git clone --filter=blob:none https://github.com/juce-framework/JUCE.git "$RUNNER_TEMP/JUCE"
+          fi
+          git -C "$RUNNER_TEMP/JUCE" checkout --quiet "${{ steps.juce.outputs.rev }}"
+
+      - name: Build VST3 + Standalone
+        id: build_plugin
+        shell: bash
+        run: |
+          cmake --preset windows-release -DSPATIAL_ECHO_JUCE_DIR="$RUNNER_TEMP/JUCE" \
+            -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+          cmake --build --preset windows-release -- -k 0
+
+      - name: Build headless test runner and host check
+        id: build_tests
+        shell: bash
+        run: |
+          cmake --preset windows-release-headless -DSPATIAL_ECHO_JUCE_DIR="$RUNNER_TEMP/JUCE" \
+            -DSPATIAL_ECHO_BUILD_HOST_CHECK=ON \
+            -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+          cmake --build --preset windows-release-headless --target SpatialEchoHeadlessTests SpatialEchoHostCheck -- -k 0
+          cp build/cmake/windows-release-headless/SpatialEchoHostCheck_artefacts/Release/SpatialEchoHostCheck.exe build/SpatialEchoHostCheck.exe
+
+      # From here on every check runs once both builds succeed, even if an
+      # earlier check failed, so one run reports every failure.
+      # The release-contract tests: latency, state, protection, routing and
+      # engine-switch contracts that must hold on Windows. This is the set
+      # verified on Windows; the full default suite runs in the macOS CI job.
+      # ReleaseAccessibility and InteractiveWalkthrough cannot run here: they
+      # wait for menu and message callbacks that the test helper delivers by
+      # pumping the macOS run loop.
+      - name: Release-contract tests
+        if: ${{ !cancelled() && steps.build_plugin.outcome == 'success' && steps.build_tests.outcome == 'success' }}
+        shell: bash
+        env:
+          SPATIAL_ECHO_HEADLESS_RUNNER: build/cmake/windows-release-headless/Spatial-Echo-HeadlessTests.exe
+          SPATIAL_ECHO_HEADLESS_LOG_DIR: build/reports/tests
+        run: |
+          tests="OutputLatencyContract,SpatialPositionBatch,StateSchemaBoundary,OutputProtection"
+          tests+=",OutputProtectionToggleContinuity,SofaConventionFixtureContracts,BinauralLatency"
+          tests+=",BinauralConvolutionParity,SpatialRoutingLatencyContract,CloudFilterStateContinuity"
+          tests+=",ActiveReverbEngineSwitchContinuity,ReverbSilenceAndDeterminism,SpringPerformanceModeLatch"
+          tests+=",TapeSpliceContinuity,TapeNoiseTransition,SyncCrossfadeRetarget"
+          tests+=",BinauralEarlyReflectionsShortBlocks,InvalidInputRecovery"
+          ./scripts/run_tests.sh --no-build --tests "$tests"
+
+      - name: Factory preset render match against macOS
+        if: ${{ !cancelled() && steps.build_plugin.outcome == 'success' && steps.build_tests.outcome == 'success' }}
+        shell: bash
+        run: |
+          mkdir -p build/reports
+          RUNNER=build/cmake/windows-release-headless/Spatial-Echo-HeadlessTests.exe
+          # Two renders: deterministic mode must repeat exactly on one machine.
+          ./scripts/render_metrics.sh "$RUNNER" build/reports/preset_metrics_windows_x64.json build/render-wavs-1
+          ./scripts/render_metrics.sh "$RUNNER" build/reports/preset_metrics_windows_x64_repeat.json build/render-wavs-2
+          status=0
+          python3 scripts/compare_render_metrics.py --exact build/reports/preset_metrics_windows_x64.json \
+            build/reports/preset_metrics_windows_x64_repeat.json --report build/reports/render-repeat.json || status=1
+          python3 scripts/compare_render_metrics.py "$RENDER_REFERENCE" build/reports/preset_metrics_windows_x64.json \
+            --report build/reports/render-match.json || status=1
+          if [ "$status" -ne 0 ]; then
+            # Keep both renders of every preset named in a failure.
+            python3 - <<'PY'
+          import json, pathlib, re, shutil
+          names = set()
+          for report in ("build/reports/render-repeat.json", "build/reports/render-match.json"):
+              names |= {f.split("/")[0] for f in json.load(open(report))["failures"] if "/" in f}
+          slugs = {re.sub(r"[^a-z0-9-]", "", re.sub(r"[ /()'&]", "-", n.lower())) for n in names}
+          for run in ("1", "2"):
+              out = pathlib.Path(f"build/reports/render-wavs-{run}"); out.mkdir(parents=True, exist_ok=True)
+              for wav in pathlib.Path(f"build/render-wavs-{run}").glob("*.wav"):
+                  if any(f"_{slug}_" in wav.name for slug in slugs):
+                      shutil.copy(wav, out / wav.name)
+          print(sorted(slugs))
+          PY
+          fi
+          exit "$status"
+
+      - name: Cache validator tools
+        if: ${{ !cancelled() && steps.build_plugin.outcome == 'success' && steps.build_tests.outcome == 'success' }}
+        uses: actions/cache@v4
+        with:
+          path: build/tools
+          key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
+
+      - name: Validators (built VST3)
+        if: ${{ !cancelled() && steps.build_plugin.outcome == 'success' && steps.build_tests.outcome == 'success' }}
+        shell: bash
+        run: |
+          ./scripts/release_validators.sh windows build/reports \
+            "$PWD/build/cmake/windows-release/SpatialEcho_artefacts/Release/VST3/Spatial-Echo.vst3"
+
+      - name: Build installer
+        if: inputs.mode == 'release'
+        shell: bash
+        run: |
+          VERSION="$(sed -n 's/^project(SpatialEcho VERSION \([^ ]*\).*/\1/p' CMakeLists.txt)"
+          ISCC="/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
+          [ -x "$ISCC" ] || choco install innosetup --version=6.7.1 --no-progress -y
+          "$ISCC" "//DMyAppVersion=$VERSION" installer/windows/Spatial-Echo.iss
+          cd installer/windows/Output
+          sha256sum "Spatial-Echo-v$VERSION-windows.exe" > "Spatial-Echo-v$VERSION-windows.exe.sha256"
+
+      - name: Install silently and check the installed VST3
+        if: inputs.mode == 'release'
+        shell: bash
+        run: |
+          VERSION="$(sed -n 's/^project(SpatialEcho VERSION \([^ ]*\).*/\1/p' CMakeLists.txt)"
+          "installer/windows/Output/Spatial-Echo-v${VERSION}-windows.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART //LOG=build/reports/install.log
+          VST3="/c/Program Files/Common Files/VST3/Spatial-Echo.vst3"
+          test -f "$VST3/Contents/x86_64-win/Spatial-Echo.vst3"
+          test -f "$VST3/Contents/Resources/Licenses/THIRD_PARTY_NOTICES.md"
+          test -f "/c/Program Files/Echoes Lab/Spatial Echo/Spatial-Echo.exe"
+          test -f "/c/Program Files/Echoes Lab/Spatial Echo/Resources/Licenses/THIRD_PARTY_NOTICES.md"
+          build/SpatialEchoHostCheck.exe --format VST3 --plugin "$(cygpath -w "$VST3")" --report build/reports/hostcheck-installed-vst3.json
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.mode == 'release'
+        with:
+          name: windows-installer
+          path: installer/windows/Output/
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-reports
+          path: build/reports
+
+  publish:
+    if: inputs.mode == 'release'
+    needs: [macos, macos-intel, windows]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-installer
+          path: release
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release
+
+      - name: Create or update the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="$(sed -n 's/^project(SpatialEcho VERSION \([^ ]*\).*/\1/p' CMakeLists.txt)"
+          TAG="v$VERSION"
+          ASSETS=(
+            "release/Spatial-Echo-$TAG-mac.pkg" "release/Spatial-Echo-$TAG-mac.pkg.sha256"
+            "release/Spatial-Echo-$TAG-windows.exe" "release/Spatial-Echo-$TAG-windows.exe.sha256"
+          )
+          for asset in "${ASSETS[@]}"; do test -f "$asset" || { echo "missing $asset"; exit 1; }; done
+          cat > notes.md <<NOTES
+          Spatial Echo $VERSION installers, built from this release's source.
+
+          - macOS 11 or later, Apple silicon and Intel: \`Spatial-Echo-$TAG-mac.pkg\` installs the AU, VST3 and Standalone.
+          - Windows x64: \`Spatial-Echo-$TAG-windows.exe\` installs the VST3 and Standalone.
+
+          The installers are not signed. On macOS, if the package is blocked, open System Settings > Privacy & Security and choose Open Anyway. On Windows, choose More info > Run anyway at the SmartScreen prompt. Each download has a .sha256 file to check it against.
+          NOTES
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" != "true" ]; then
+              echo "$TAG is already published; change the version in CMakeLists.txt first."
+              exit 1
+            fi
+            gh release upload "$TAG" "${ASSETS[@]}" --clobber
+            gh release edit "$TAG" --notes-file notes.md --target "$GITHUB_SHA"
+          else
+            gh release create "$TAG" "${ASSETS[@]}" --draft --target "$GITHUB_SHA" \
+              --title "Spatial Echo $VERSION" --notes-file notes.md
+          fi

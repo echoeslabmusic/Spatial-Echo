@@ -1,0 +1,182 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/cmake/macos-debug",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "SPATIAL_ECHO_FORMATS": "Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "ON"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "macos-universal-release",
+      "displayName": "macOS Universal Release",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/cmake/macos-universal-release",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "SPATIAL_ECHO_FORMATS": "AU;VST3;Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "OFF"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "macos-clangd",
+      "displayName": "macOS clangd compile commands",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/cmake/macos-clangd",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "SPATIAL_ECHO_FORMATS": "Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "ON"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "macos-release-headless",
+      "displayName": "macOS Release Headless Tests",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/cmake/macos-release-headless",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "SPATIAL_ECHO_FORMATS": "Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "ON"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Windows x64 Release (Ninja, MSVC developer shell)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/cmake/windows-release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "SPATIAL_ECHO_FORMATS": "VST3;Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "OFF",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded",
+        "CMAKE_MSVC_DEBUG_INFORMATION_FORMAT": "Embedded",
+        "CMAKE_C_FLAGS_RELEASE": "/O2 /Ob2 /DNDEBUG /Z7",
+        "CMAKE_CXX_FLAGS_RELEASE": "/O2 /Ob2 /DNDEBUG /Z7",
+        "CMAKE_MODULE_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_EXE_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_PDB_OUTPUT_DIRECTORY": "${sourceDir}/build/pdb/${presetName}"
+      }
+    },
+    {
+      "name": "windows-release-headless",
+      "displayName": "Windows x64 Release Headless Tests (Ninja, MSVC developer shell)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/cmake/windows-release-headless",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "SPATIAL_ECHO_FORMATS": "Standalone",
+        "SPATIAL_ECHO_BUILD_HEADLESS": "ON",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded",
+        "CMAKE_MSVC_DEBUG_INFORMATION_FORMAT": "Embedded",
+        "CMAKE_C_FLAGS_RELEASE": "/O2 /Ob2 /DNDEBUG /Z7",
+        "CMAKE_CXX_FLAGS_RELEASE": "/O2 /Ob2 /DNDEBUG /Z7",
+        "CMAKE_MODULE_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_SHARED_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_EXE_LINKER_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO",
+        "CMAKE_PDB_OUTPUT_DIRECTORY": "${sourceDir}/build/pdb/${presetName}"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "macos-debug",
+      "configurePreset": "macos-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "macos-universal-release",
+      "configurePreset": "macos-universal-release",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos-clangd",
+      "configurePreset": "macos-clangd"
+    },
+    {
+      "name": "macos-release-headless",
+      "configurePreset": "macos-release-headless",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-release",
+      "configurePreset": "windows-release"
+    },
+    {
+      "name": "windows-release-headless",
+      "configurePreset": "windows-release-headless"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "macos-debug",
+      "configurePreset": "macos-debug",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "macos-release-headless",
+      "configurePreset": "macos-release-headless",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-release-headless",
+      "configurePreset": "windows-release-headless",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

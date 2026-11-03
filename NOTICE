@@ -1,0 +1,75 @@
+Spatial Echo
+Copyright (c) 2024-2026 Echoes Lab
+
+The Spatial Echo source code is distributed under the MIT License. See LICENSE.
+
+"Spatial Echo" and the Echoes Lab name and logos (plugin/Source/Resources/Brand)
+are trademarks of Echoes Lab and are not covered by the MIT License. If you
+distribute a modified build, give it its own name, bundle identifier, Audio
+Unit manufacturer and subtype codes, and installer identifier so that it does
+not collide with the official release in hosts. The logo files themselves
+remain copyright Echoes Lab, all rights reserved.
+
+Third-Party Notices
+-------------------
+
+Full texts and attribution details are in docs/licenses/THIRD_PARTY_NOTICES.md,
+which is also installed alongside the binaries.
+
+JUCE Framework (8.0.12)
+  Author:  Raw Material Software Limited
+  Source:  https://github.com/juce-framework/JUCE
+  License: GNU Affero General Public License v3 or the JUCE commercial licence
+           https://juce.com/legal/juce-8-licence/
+  Note:    JUCE is not included in this repository. The build uses a separate
+           checkout pinned to one upstream revision. Official Echoes Lab
+           binaries are built under the JUCE commercial licence. Anyone who
+           builds or redistributes their own binaries must comply with the
+           JUCE licence that applies to them.
+
+CloudSeed (algorithmic reverb)              MIT
+VST 3 SDK (via JUCE)                        MIT
+libmysofa, including kdtree                 BSD 3-Clause
+  (packaged as in the Spatial Audio Framework by Leo McCormack)
+chowdsp_wdf, including Wright Omega         BSD 3-Clause / MIT
+zlib 1.3.2                                  zlib License
+Ooura FFT                                   Permissive (free to use, copy,
+                                            modify and distribute without fee)
+PCG32 random number generator               Apache License 2.0
+
+Compiled in from the JUCE modules:
+HarfBuzz                                    Old MIT
+SheenBidi                                   Apache License 2.0
+Audio Unit SDK (Audio Unit builds only)     Apache License 2.0
+Independent JPEG Group's JPEG software      IJG License
+libpng                                      PNG Reference Library License v2
+zlib 1.3.1 (JUCE's copy)                    zlib License
+GLEW, Mesa, and Khronos OpenGL headers      BSD 3-Clause / MIT
+
+This software is based in part on the work of the Independent JPEG Group.
+
+HUTUBS HRTF dataset (pp1 measured HRIRs)
+  Source:  TU Berlin, https://depositonce.tu-berlin.de/items/dc2a3076-a291-417e-97f0-7697e332c960
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+  File:    plugin/Source/Resources/HRTF/pp1_HRIRs_measured.sofa
+  SHA-256: f626d335c590db687608fff5992972725230d594067b2e6906893bddc85e5173
+
+PxPlus IBM VGA 9x16 font
+  Author:  VileR, The Ultimate Oldschool PC Font Pack, https://int10h.org/oldschool-pc-fonts/
+  License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+  Note:    The font is a separately licensed asset bundled with the plug-in;
+           it is not relicensed under the MIT License.
+
+PCG32 random number generator
+  plugin/Source/DSP/PCG32.h adapts the seeding and output functions of the PCG
+  minimal C implementation (pcg_basic.c), Copyright 2014 Melissa O'Neill
+  <oneill@pcg-random.org>, https://www.pcg-random.org, licensed under the
+  Apache License, Version 2.0 (docs/licenses/APACHE-2.0.txt). Echoes Lab
+  changes: wrapped in a C++ class, added float output and random-device
+  seeding.
+
+Trademarks
+----------
+
+VST is a registered trademark of Steinberg Media Technologies GmbH. Audio
+Units is a trademark of Apple Inc.

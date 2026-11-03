@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.cmake text eol=lf
+*.sofa binary
+*.ttf binary
+*.png binary
+*.appc text eol=lf

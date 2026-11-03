@@ -1,0 +1,65 @@
+Spatial Echo
+Copyright (c) 2024-2026 Echoes Lab.
+
+The Spatial Echo source code is released under the MIT License:
+
+MIT License
+
+Copyright (c) 2024-2026 Echoes Lab
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+This binary also contains the JUCE framework, used under the JUCE commercial
+licence, and third-party components and data: HUTUBS HRTF data (CC BY 4.0),
+the PxPlus IBM VGA 9x16 font (CC BY-SA 4.0), CloudSeed (MIT), libmysofa
+(BSD 3-Clause), chowdsp_wdf (BSD 3-Clause), zlib (zlib License), Ooura FFT
+(author's permissive terms), PCG32 (Apache License 2.0), the VST3 SDK (MIT),
+and libraries compiled in from JUCE: HarfBuzz (Old MIT), SheenBidi (Apache
+License 2.0), the Independent JPEG Group's JPEG software (IJG License), libpng
+(PNG Reference Library License), and GLEW, Mesa, and Khronos OpenGL headers
+(BSD 3-Clause / MIT). Their notices are installed alongside the plug-in in
+THIRD_PARTY_NOTICES.md. The Spatial Echo name and the Echoes Lab logos are
+trademarks of Echoes Lab and are not covered by the MIT License.
+
+This software is based in part on the work of the Independent JPEG Group.
+
+VST is a registered trademark of Steinberg Media Technologies GmbH.
+
+Source code: https://github.com/echoeslabmusic/Spatial-Echo
+
+THIRD-PARTY NOTICES
+This product incorporates the following third-party software and data. Full
+license texts are installed with the plug-in in
+  C:\Program Files\Common Files\VST3\Spatial-Echo.vst3\Contents\Resources\Licenses\
+
+- JUCE framework (JUCE commercial licence). Copyright (c) Raw Material Software Limited
+- CloudSeed, algorithmic reverb (MIT). Copyright (c) Valdemar Orn / Ghost Note Engineering
+- chowdsp_wdf, wave digital filters (BSD 3-Clause). Copyright (c) Chowdhury-DSP (Jatin Chowdhury); Wright Omega implementation (MIT) Copyright (c) Stefano D'Angelo
+- HUTUBS HRTF dataset (CC BY 4.0). Brinkmann et al., TU Berlin
+- libmysofa, SOFA reader (BSD 3-Clause). Copyright (c) Symonics GmbH, Christian Hoene; kdtree Copyright (c) John Tsiombikas; packaged as in the Spatial Audio Framework by Leo McCormack
+- zlib (zlib License). Copyright (c) Jean-loup Gailly and Mark Adler
+- Ooura FFT (author's permissive terms). Takuya Ooura
+- PxPlus IBM VGA 9x16 font (CC BY-SA 4.0). VileR, int10h.org Oldschool PC Font Pack
+- VST3 SDK (MIT). Copyright (c) Steinberg Media Technologies GmbH
+- PCG32 random number generator (Apache License 2.0). Copyright 2014 Melissa O'Neill, pcg-random.org
+- HarfBuzz, via JUCE (Old MIT). Copyright (c) Google, Inc., Behdad Esfahbod, Red Hat, Inc., and the other HarfBuzz authors
+- SheenBidi, via JUCE (Apache License 2.0). Copyright (c) 2014-2025 Muhammad Tayyab Akram
+- Independent JPEG Group's JPEG software, via JUCE (IJG License). Copyright (c) 1991-2024 Thomas G. Lane, Guido Vollbeding
+- libpng, via JUCE (PNG Reference Library License v2). Copyright (c) 1995-2019 The PNG Reference Library Authors
+- GLEW, Mesa, and Khronos OpenGL headers, via JUCE (BSD 3-Clause / MIT). Copyright (c) 2002-2007 Milan Ikits, Marcelo E. Magallon, Lev Povalahev; (c) 1999-2007 Brian Paul; (c) 2007 The Khronos Group Inc.
