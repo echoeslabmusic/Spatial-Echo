@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -55,14 +55,14 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: JUCE revision
         id: juce
         run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
 
       - name: Cache JUCE
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/JUCE
           key: juce-${{ steps.juce.outputs.rev }}
@@ -86,7 +86,7 @@ jobs:
 
       - name: Upload test logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: headless-test-logs
           path: build/test-logs

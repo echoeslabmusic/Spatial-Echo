@@ -36,14 +36,14 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: JUCE revision
         id: juce
         run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
 
       - name: Cache JUCE
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/JUCE
           key: juce-${{ steps.juce.outputs.rev }}
@@ -76,7 +76,7 @@ jobs:
           cp build/cmake/hostcheck/SpatialEchoHostCheck_artefacts/Release/SpatialEchoHostCheck build/SpatialEchoHostCheck
 
       - name: Cache validator tools
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
@@ -93,7 +93,7 @@ jobs:
           tar -C "$HOME/Library/Audio/Plug-Ins" -czf build/plugins-macos.tgz VST3/Spatial-Echo.vst3 Components/Spatial-Echo.component
           tar -C build -czf build/hostcheck-macos.tgz SpatialEchoHostCheck
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-installer
           path: |
@@ -101,7 +101,7 @@ jobs:
             build/release_packages/Spatial-Echo-v*-mac.pkg
             build/release_packages/Spatial-Echo-v*-mac.pkg.sha256
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-bundles
           path: |
@@ -109,7 +109,7 @@ jobs:
             build/hostcheck-macos.tgz
           retention-days: 3
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: macos-reports
@@ -120,9 +120,9 @@ jobs:
     runs-on: macos-15-intel
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: macos-bundles
           path: build
@@ -137,7 +137,7 @@ jobs:
           auval -strict -v aufx SpEc EchL
 
       - name: Cache validator tools
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
@@ -149,7 +149,7 @@ jobs:
             "$HOME/Library/Audio/Plug-Ins/VST3/Spatial-Echo.vst3" \
             "$HOME/Library/Audio/Plug-Ins/Components/Spatial-Echo.component"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: macos-intel-reports
@@ -161,13 +161,13 @@ jobs:
     env:
       SCCACHE_GHA_ENABLED: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
         with:
           arch: x64
 
-      - uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+      - uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
 
       - name: JUCE revision
         id: juce
@@ -175,7 +175,7 @@ jobs:
         run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
 
       - name: Cache JUCE
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/JUCE
           key: juce-windows-${{ steps.juce.outputs.rev }}
@@ -263,7 +263,7 @@ jobs:
 
       - name: Cache validator tools
         if: ${{ !cancelled() && steps.build_plugin.outcome == 'success' && steps.build_tests.outcome == 'success' }}
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build/tools
           key: release-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/release_validators.sh') }}
@@ -299,13 +299,13 @@ jobs:
           test -f "/c/Program Files/Echoes Lab/Spatial Echo/Resources/Licenses/THIRD_PARTY_NOTICES.md"
           build/SpatialEchoHostCheck.exe --format VST3 --plugin "$(cygpath -w "$VST3")" --report build/reports/hostcheck-installed-vst3.json
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: inputs.mode == 'release'
         with:
           name: windows-installer
           path: installer/windows/Output/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: windows-reports
@@ -319,14 +319,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: macos-installer
           path: release
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: windows-installer
           path: release
