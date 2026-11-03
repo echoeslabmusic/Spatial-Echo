@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #222;
+    padding: 10px 20px;
+  }
+  h2 { font-size: 15px; }
+  h3 { font-size: 13px; margin: 14px 0 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; font-size: 12px; }
+  th { color: #555; }
+  ol { padding-left: 20px; }
+  li { margin-bottom: 7px; }
+  .important { background: #fff8e1; border-left: 3px solid #d69e2e; padding: 8px 10px; }
+  .note { font-size: 11px; color: #888; margin-top: 12px; }
+</style>
+</head>
+<body>
+  <h2>Free download, optional donations</h2>
+  <p>Spatial Echo is free to use. Donations are optional and are not required
+     to download or use the plug-in.</p>
+  <h2>Read this first: unsigned installer</h2>
+  <p class="important">This installer has no Apple Developer ID signature and is
+     not notarized by Apple. Obtain it from Echoes Lab's official download page.
+     Do not disable Gatekeeper globally.</p>
+
+  <ol>
+    <li>Quit Ableton Live and any other audio applications.</li>
+    <li>Open the <code>.pkg</code> installer in Finder.</li>
+    <li>If macOS blocks it, open <strong>System Settings &rarr; Privacy &amp;
+        Security</strong>, scroll to the security message for Spatial Echo, choose
+        <strong>Open Anyway</strong>, then confirm <strong>Open</strong>.
+        Authenticate if prompted. Control-click does not bypass this warning on
+        macOS Sequoia or later. On older
+        macOS versions, use <strong>System Preferences &rarr; Security &amp;
+        Privacy &rarr; General &rarr; Open Anyway</strong>.</li>
+    <li>Run the installer. It asks for a Mac administrator password because it
+        installs into the shared plug-in and Applications folders.</li>
+    <li>Restart or rescan your DAW after installation. Open the standalone
+        app at <code>/Applications/Spatial-Echo.app</code>; use the same Privacy &amp; Security
+        <strong>Open Anyway</strong> path if macOS blocks it.</li>
+  </ol>
+
+  <p>Before bypassing a warning, you can verify the package against the
+     accompanying <code>.sha256</code> file in Terminal:</p>
+  <p><code>shasum -a 256 Spatial-Echo-*-mac.pkg</code></p>
+  <p>The printed hash must match the one in the accompanying
+     <code>.pkg.sha256</code> file.</p>
+
+  <h2>Install Locations</h2>
+  <table>
+    <tr><th>Component</th><th>Path</th></tr>
+    <tr><td>VST3</td><td>/Library/Audio/Plug-Ins/VST3/Spatial-Echo.vst3</td></tr>
+    <tr><td>Audio Unit</td><td>/Library/Audio/Plug-Ins/Components/Spatial-Echo.component</td></tr>
+    <tr><td>Standalone</td><td>/Applications/Spatial-Echo.app</td></tr>
+  </table>
+
+  <h2>System Requirements</h2>
+  <table>
+    <tr><th>Requirement</th><th>Minimum</th></tr>
+    <tr><td>macOS</td><td>11.0 Big Sur</td></tr>
+    <tr><td>Architecture</td><td>Apple Silicon (arm64) or Intel (x86_64)</td></tr>
+    <tr><td>Formats</td><td>VST3, AU, Standalone</td></tr>
+  </table>
+
+  <h2>Performance</h2>
+  <p>Spatial Echo is CPU-heavy. At 88.2/96 kHz or with many instances, watch
+     your DAW's CPU meter; if audio crackles, raise the buffer size or use fewer
+     instances.</p>
+
+  <h2>After Installation</h2>
+  <p>Restart your DAW and rescan plug-ins. This package does not remove older
+     copies under your home Library; duplicate user/system copies can affect
+     which version a DAW loads. If the plug-in remains blocked or missing, email
+     <a href="mailto:hello@echoeslabmusic.com">hello@echoeslabmusic.com</a> with
+     the exact message, your macOS version and your DAW.</p>
+  <p>User presets are stored in:<br>
+     <code>~/Library/Application Support/Spatial Echo/Presets/</code></p>
+
+  <p class="note">The spatial engine is designed for headphone listening.</p>
+</body>
+</html>

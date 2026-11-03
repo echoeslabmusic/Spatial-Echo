@@ -1,0 +1,92 @@
+# Repository checks and the headless test suite.
+#
+#   checks  formatting, the generated preset header, the static realtime-safety
+#           audit and the suite script's parser fixtures (every trigger)
+#   tests   builds the Release headless runner on macOS and runs the default
+#           suite (pull requests and manual runs only, never on push)
+#
+# The plug-in installers are built by the manual release workflow.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Formatting, preset header, realtime audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install clang-format
+        run: python -m pip install clang-format==23.1.0
+
+      - name: Formatting
+        run: ./scripts/format_sources.sh --check
+
+      - name: Factory preset header is current
+        run: python3 tools/presets/gen_factory.py --check
+
+      - name: Realtime-safety audit
+        run: ./scripts/audit_rt_safety.sh
+
+      - name: Test script parser fixtures
+        run: ./scripts/test_headless_suite_parsing.sh
+
+  tests:
+    name: Headless test suite (macOS)
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JUCE revision
+        id: juce
+        run: echo "rev=$(sed -n 's/.*SPATIAL_ECHO_JUCE_REVISION "\([0-9a-f]*\)".*/\1/p' cmake/SpatialEchoJucePin.cmake)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache JUCE
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/JUCE
+          key: juce-${{ steps.juce.outputs.rev }}
+
+      - name: Fetch JUCE
+        run: |
+          if [ ! -d "$RUNNER_TEMP/JUCE/.git" ]; then
+            git clone --filter=blob:none https://github.com/juce-framework/JUCE.git "$RUNNER_TEMP/JUCE"
+          fi
+          git -C "$RUNNER_TEMP/JUCE" checkout --quiet "${{ steps.juce.outputs.rev }}"
+
+      - name: Build the Release headless runner
+        run: |
+          cmake --preset macos-release-headless -DSPATIAL_ECHO_JUCE_DIR="$RUNNER_TEMP/JUCE"
+          cmake --build --preset macos-release-headless --target SpatialEchoHeadlessTests
+
+      - name: Default test suite
+        env:
+          SPATIAL_ECHO_HEADLESS_LOG_DIR: ${{ github.workspace }}/build/test-logs
+        run: ./scripts/run_tests.sh --no-build
+
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: headless-test-logs
+          path: build/test-logs

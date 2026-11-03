@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Spatial Echo VERSION_PLACEHOLDER</title>
+    <organization>com.echoeslab</organization>
+    <domains enable_localSystem="true"/>
+    <options customize="allow" require-scripts="false"
+             hostArchitectures="arm64,x86_64"/>
+    <volume-check script="true">
+        <allowed-os-versions>
+            <os-version min="11.0"/>
+        </allowed-os-versions>
+    </volume-check>
+
+    <welcome    file="welcome.html"  mime-type="text/html"/>
+    <readme     file="readme.html"   mime-type="text/html"/>
+    <license    file="license.html"  mime-type="text/html"/>
+
+    <choices-outline>
+        <line choice="vst3"/>
+        <line choice="au"/>
+        <line choice="standalone"/>
+    </choices-outline>
+
+    <choice id="vst3" visible="true" enabled="true" selected="true"
+            title="VST3 Plugin"
+            description="Installs Spatial-Echo.vst3 to /Library/Audio/Plug-Ins/VST3/">
+        <pkg-ref id="com.echoeslab.spatialecho.vst3"/>
+    </choice>
+
+    <choice id="au" visible="true" enabled="true" selected="true"
+            title="Audio Unit Plugin (AU)"
+            description="Installs Spatial-Echo.component to /Library/Audio/Plug-Ins/Components/">
+        <pkg-ref id="com.echoeslab.spatialecho.au"/>
+    </choice>
+
+    <choice id="standalone" visible="true" enabled="true" selected="true"
+            title="Standalone Application"
+            description="Installs Spatial-Echo.app to /Applications/">
+        <pkg-ref id="com.echoeslab.spatialecho.standalone"/>
+    </choice>
+
+    <pkg-ref id="com.echoeslab.spatialecho.vst3"       version="VERSION_PLACEHOLDER" auth="Root">Spatial-Echo-VST3.pkg</pkg-ref>
+    <pkg-ref id="com.echoeslab.spatialecho.au"          version="VERSION_PLACEHOLDER" auth="Root">Spatial-Echo-AU.pkg</pkg-ref>
+    <pkg-ref id="com.echoeslab.spatialecho.standalone"  version="VERSION_PLACEHOLDER" auth="Root">Spatial-Echo-Standalone.pkg</pkg-ref>
+</installer-gui-script>

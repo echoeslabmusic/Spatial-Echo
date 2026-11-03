@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #222;
+    padding: 10px 20px;
+  }
+  h2 { font-size: 14px; margin-bottom: 6px; }
+  h3 { font-size: 12px; margin-bottom: 4px; color: #444; }
+  .section { margin-bottom: 16px; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 12px 0; }
+  pre { font-size: 10px; white-space: pre-wrap; color: #555; }
+</style>
+</head>
+<body>
+  <h2>Spatial Echo</h2>
+  <p>Copyright &copy; 2024&ndash;2026 Echoes Lab.</p>
+  <p>The Spatial Echo source code is released under the MIT License:</p>
+<pre>MIT License
+
+Copyright (c) 2024-2026 Echoes Lab
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+  <p>This binary also contains the JUCE framework, used under the JUCE
+     commercial licence, and third-party components and data: HUTUBS HRTF data
+     (CC BY 4.0), the PxPlus IBM VGA 9x16 font (CC BY-SA 4.0), CloudSeed (MIT),
+     libmysofa (BSD 3-Clause), chowdsp_wdf (BSD 3-Clause), zlib (zlib
+     License), Ooura FFT (author's permissive terms), PCG32 (Apache License
+     2.0), the VST3 SDK (MIT), and libraries compiled in from JUCE: HarfBuzz
+     (Old MIT), SheenBidi (Apache License 2.0), the Audio Unit SDK (Apache
+     License 2.0), the Independent JPEG Group's JPEG software (IJG License),
+     libpng (PNG Reference Library License), and GLEW, Mesa, and Khronos
+     OpenGL headers (BSD 3-Clause / MIT). Their notices are installed
+     alongside the plug-in in <code>THIRD_PARTY_NOTICES.md</code>. The Spatial
+     Echo name and the Echoes Lab logos are trademarks of Echoes Lab and are
+     not covered by the MIT License.</p>
+  <p>This software is based in part on the work of the Independent JPEG
+     Group.</p>
+  <p>VST is a registered trademark of Steinberg Media Technologies GmbH.
+     Audio Units is a trademark of Apple Inc.</p>
+  <p>Source code: <a href="https://github.com/echoeslabmusic/Spatial-Echo">https://github.com/echoeslabmusic/Spatial-Echo</a></p>
+
+  <hr>
+
+  <h2>Third-Party Notices</h2>
+  <p>This product incorporates the following third-party software and data.
+     Full license texts are installed alongside the plugin.</p>
+
+  <div class="section">
+    <h3>JUCE Framework (JUCE commercial licence)</h3>
+    <p>Copyright &copy; Raw Material Software Limited</p>
+  </div>
+  <div class="section">
+    <h3>CloudSeed, Algorithmic Reverb (MIT)</h3>
+    <p>Copyright &copy; Valdemar Orn / Ghost Note Engineering</p>
+  </div>
+  <div class="section">
+    <h3>chowdsp_wdf, Wave Digital Filters (BSD 3-Clause)</h3>
+    <p>Copyright &copy; Chowdhury-DSP (Jatin Chowdhury); Wright Omega implementation &copy; Stefano D&rsquo;Angelo (MIT)</p>
+  </div>
+  <div class="section">
+    <h3>HUTUBS HRTF Dataset (CC BY 4.0)</h3>
+    <p>Brinkmann et al., TU Berlin</p>
+  </div>
+  <div class="section">
+    <h3>libmysofa, SOFA Reader (BSD 3-Clause)</h3>
+    <p>Copyright &copy; Symonics GmbH, Christian Hoene; kdtree &copy; John
+       Tsiombikas; packaged as in the Spatial Audio Framework by Leo
+       McCormack</p>
+  </div>
+  <div class="section">
+    <h3>zlib (zlib License)</h3>
+    <p>Copyright &copy; Jean-loup Gailly and Mark Adler</p>
+  </div>
+  <div class="section">
+    <h3>Ooura FFT (author's permissive terms)</h3>
+    <p>Takuya Ooura</p>
+  </div>
+  <div class="section">
+    <h3>PxPlus IBM VGA 9x16 Font (CC BY-SA 4.0)</h3>
+    <p>VileR, int10h.org Oldschool PC Font Pack</p>
+  </div>
+  <div class="section">
+    <h3>VST3 SDK (MIT)</h3>
+    <p>Copyright &copy; Steinberg Media Technologies GmbH</p>
+  </div>
+  <div class="section">
+    <h3>HarfBuzz, via JUCE (Old MIT)</h3>
+    <p>Copyright &copy; Google, Inc., Behdad Esfahbod, Red Hat, Inc., and the
+       other HarfBuzz authors</p>
+  </div>
+  <div class="section">
+    <h3>SheenBidi, via JUCE (Apache License 2.0)</h3>
+    <p>Copyright &copy; 2014&ndash;2025 Muhammad Tayyab Akram</p>
+  </div>
+  <div class="section">
+    <h3>Audio Unit SDK, via JUCE (Apache License 2.0)</h3>
+    <p>Copyright &copy; 2000&ndash;2021 Apple Inc.</p>
+  </div>
+  <div class="section">
+    <h3>Independent JPEG Group's JPEG Software, via JUCE (IJG License)</h3>
+    <p>Copyright &copy; 1991&ndash;2024 Thomas G. Lane, Guido Vollbeding.
+       This software is based in part on the work of the Independent JPEG
+       Group.</p>
+  </div>
+  <div class="section">
+    <h3>libpng, via JUCE (PNG Reference Library License v2)</h3>
+    <p>Copyright &copy; 1995&ndash;2019 The PNG Reference Library Authors</p>
+  </div>
+  <div class="section">
+    <h3>GLEW, Mesa, and Khronos OpenGL Headers, via JUCE (BSD 3-Clause / MIT)</h3>
+    <p>Copyright &copy; 2002&ndash;2007 Milan Ikits, Marcelo E. Magallon, Lev
+       Povalahev; &copy; 1999&ndash;2007 Brian Paul; &copy; 2007 The Khronos
+       Group Inc.</p>
+  </div>
+
+  <div class="section">
+    <h3>PCG32 Random Number Generator (Apache License 2.0)</h3>
+    <p>Copyright &copy; 2014 Melissa O&rsquo;Neill,
+       <a href="https://www.pcg-random.org">pcg-random.org</a></p>
+  </div>
+
+  <hr>
+  <p style="font-size:11px; color:#888;">
+    Full license texts: see /Library/Audio/Plug-Ins/VST3/Spatial-Echo.vst3/Contents/Resources/Licenses/
+    after installation, or visit
+    <a href="https://echoeslabmusic.com/lab">echoeslabmusic.com/lab</a>.
+  </p>
+</body>
+</html>

@@ -1,0 +1,59 @@
+name: Bug report
+description: Something is wrong with the plug-in or the standalone app
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Spatial Echo version
+      placeholder: "1.0.0 (shown in the About panel)"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Operating system and CPU
+      placeholder: "macOS 15.1, Apple M2 / Windows 11, Ryzen 7"
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: Host and version, or Standalone
+      placeholder: "Ableton Live 12.1, Logic Pro 11.1, Reaper 7.3, Standalone"
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Plug-in format
+      options: [VST3, AU, Standalone]
+    validations:
+      required: true
+  - type: input
+    id: audio
+    attributes:
+      label: Sample rate and buffer size
+      placeholder: "48 kHz, 256 samples"
+  - type: input
+    id: preset
+    attributes:
+      label: Preset involved, if any
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Load preset X  2. Set Feedback to ...  3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: A short audio clip, screenshot, or crash log helps a lot.

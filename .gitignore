@@ -1,0 +1,17 @@
+# Build output
+/build/
+/build-*/
+/installer/windows/Output/
+/CMakeUserPresets.json
+
+# Compilation database and editor caches
+/compile_commands.json
+/.cache/
+/.vscode/
+/.idea/
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+/.venv*/

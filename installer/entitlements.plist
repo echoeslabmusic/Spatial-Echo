@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Intentionally empty. The plug-in does not use JIT compilation or load
+         third-party runtime libraries, so allow-unsigned-executable-memory and
+         disable-library-validation are not needed. Add entitlements only when
+         release testing proves one necessary. -->
+</dict>
+</plist>

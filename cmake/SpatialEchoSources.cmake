@@ -1,0 +1,107 @@
+set(SPATIAL_ECHO_SHARED_SOURCES
+    plugin/Source/DSP/BinauralConvolutionEngine.cpp
+    plugin/Source/DSP/BinauralHRTFDatabase.cpp
+    plugin/Source/DSP/BinauralProcessor.cpp
+    plugin/Source/DSP/SpatialField.cpp
+    plugin/Source/DSP/BinauralProcessorDiffuse.cpp
+    plugin/Source/DSP/BinauralProcessorITD.cpp
+    plugin/Source/DSP/BinauralProcessorLifecycle.cpp
+    plugin/Source/DSP/BinauralProcessorNearField.cpp
+    plugin/Source/DSP/BinauralProcessorPosition.cpp
+    plugin/Source/DSP/BinauralProcessorProcess.cpp
+    plugin/Source/DSP/BinauralProcessorSofa.cpp
+    plugin/Source/DSP/EchoesModel.cpp
+    plugin/Source/DSP/OouraFFT.cpp
+    plugin/Source/DSP/Reverbprocessor.cpp
+    plugin/Source/DSP/TapeDelay.cpp
+    plugin/Source/DSP/TapeRecordSaturator.cpp
+    plugin/Source/DSP/ToneFiltering.cpp
+    plugin/Source/DSP/dependencies/RbjBiquad.cpp
+    plugin/Source/DSP/dependencies/CircularBuffer.cpp
+    plugin/Source/DSP/dependencies/CloudSeedCore/DSP/Biquad.cpp
+    plugin/Source/DSP/dependencies/CloudSeedCore/DSP/RandomBuffer.cpp
+    plugin/Source/DSP/dependencies/CloudSeedCore/Parameters.cpp
+    plugin/Source/DSP/dependencies/IIROversampler.cpp
+    plugin/Source/DSP/dependencies/sofa/libmysofa/internal/hdf_dataobject.c
+    plugin/Source/DSP/dependencies/sofa/libmysofa/internal/hdf_fractalhead.c
+    plugin/Source/DSP/dependencies/sofa/libmysofa/internal/hdf_reader.c
+    plugin/Source/DSP/dependencies/sofa/libmysofa/internal/kdtree.c
+    plugin/Source/DSP/dependencies/sofa/libmysofa/internal/mysofa_internal.c
+    plugin/Source/DSP/dependencies/sofa/libmysofa/mysofa.c
+    plugin/Source/DSP/dependencies/sofa/zlib/adler32.c
+    plugin/Source/DSP/dependencies/sofa/zlib/crc32.c
+    plugin/Source/DSP/dependencies/sofa/zlib/inffast.c
+    plugin/Source/DSP/dependencies/sofa/zlib/inflate.c
+    plugin/Source/DSP/dependencies/sofa/zlib/inftrees.c
+    plugin/Source/DSP/dependencies/sofa/zlib/zutil.c
+    plugin/Source/PluginEditor.cpp
+    plugin/Source/PluginProcessor.cpp
+    plugin/Source/PluginProcessorDebug.cpp
+    plugin/Source/Tests/Binaural/BinauralSelfTests.cpp
+    plugin/Source/Tests/Delay/DelayTests.cpp
+    plugin/Source/Tests/Delay/FeedbackUserDomainTests.cpp
+    plugin/Source/Tests/Headless/HeadlessTestRunner.cpp
+    plugin/Source/Tests/Preamp/PreampAreaProbes.cpp
+    plugin/Source/Tests/Preamp/PreampTests.cpp
+    plugin/Source/Tests/Reverb/ReverbPresetIRTest.cpp
+    plugin/Source/Tests/Reverb/ReverbProcessorTestAccess.cpp
+    plugin/Source/Tests/Reverb/ReverbTests.cpp
+    plugin/Source/Tests/System/RegressionTests.cpp
+    plugin/Source/Tests/System/BinauralTests.cpp
+    plugin/Source/Tests/System/OutputRoutingTests.cpp
+    plugin/Source/Tests/System/ReverbSystemTests.cpp
+    plugin/Source/Tests/System/SpatialRoutingTests.cpp
+    plugin/Source/Tests/System/StatePresetTests.cpp
+    plugin/Source/Tests/System/DisplayNameTests.cpp
+    plugin/Source/Tests/System/EchoesModelTestAccess.cpp
+    plugin/Source/Tests/System/EditorControlTests.cpp
+    plugin/Source/Tests/System/InteractiveWalkthroughTests.cpp
+    plugin/Source/Tests/System/ParameterValueLayoutTest.cpp
+    plugin/Source/Tests/System/PerTapSpatializationTests.cpp
+    plugin/Source/Tests/System/PresetRosterRenders.cpp
+    plugin/Source/Tests/System/ReverbAreaProbes.cpp
+    plugin/Source/Tests/System/SerialRoutingHeadroomProbe.cpp
+    plugin/Source/Tests/System/SpatialHeadViewPaintBenchTest.cpp
+    plugin/Source/Tests/System/TrajectoryTests.cpp
+    plugin/Source/Tests/TapeEmulation/TapeBaselineMeasurement.cpp
+    plugin/Source/Tests/TapeEmulation/DelayAreaProbes.cpp
+    plugin/Source/Tests/TapeEmulation/FeedbackTapeCalibrationTests.cpp
+    plugin/Source/Tests/TapeEmulation/TapePresetBaselineRenders.cpp
+    plugin/Source/Tests/TapeEmulation/TapeRecordSaturatorTests.cpp
+    plugin/Source/Tests/TapeEmulation/SelfOscBloomProfile.cpp
+    plugin/Source/Tests/TapeEmulation/TapeDelayTestAccess.cpp
+    plugin/Source/Tests/TapeEmulation/TapeTests.cpp
+    plugin/Source/Tests/ToneStack/ToneStackTests.cpp
+    plugin/Source/UI/Components/SpatialHeadView.cpp
+    plugin/Source/UI/Components/SpatialHeadGL.cpp
+    plugin/Source/UI/Components/InteractiveWalkthrough.cpp
+    plugin/Source/UI/Components/EditorPreferences.cpp
+    plugin/Source/UI/Components/DelayPanel.cpp
+    plugin/Source/UI/Components/DivisionMenuGrid.cpp
+    plugin/Source/UI/Components/EchoEngineDropdown.cpp
+    plugin/Source/UI/Components/MenuChrome.cpp
+    plugin/Source/UI/Components/PresetBrowserOverlay.cpp
+    plugin/Source/UI/Components/ReverbDropdown.cpp
+    plugin/Source/UI/Components/ReverbPanel.cpp
+    plugin/Source/UI/Components/SectionDropdown.cpp
+    plugin/Source/UI/Components/MotionCardStrip.cpp
+    plugin/Source/UI/Components/SpatialMotionSection.cpp
+    plugin/Source/UI/Components/SpatialPanel.cpp
+    plugin/Source/UI/Components/SpatialPositionEditor.cpp
+    plugin/Source/UI/Components/SpatialPresetRow.cpp
+    plugin/Source/UI/Components/SpatialRoutingDrawer.cpp
+    plugin/Source/UI/WalkthroughController.cpp)
+
+set(SPATIAL_ECHO_HEADLESS_MAIN
+    tools/HeadlessTestRunner/HeadlessTestRunner.cpp)
+
+# Vendored third-party sources (libmysofa, zlib, CloudSeed) are compiled as
+# shipped by upstream; the project's warning flags do not apply to them.
+# Vendored headers are bracketed by DSP/dependencies/ThirdPartyIncludesBegin.h.
+set(SPATIAL_ECHO_VENDORED_SOURCES ${SPATIAL_ECHO_SHARED_SOURCES})
+list(FILTER SPATIAL_ECHO_VENDORED_SOURCES INCLUDE REGEX "dependencies/(sofa/.*\\.c|CloudSeedCore/.*\\.cpp)$")
+if(MSVC)
+    set_source_files_properties(${SPATIAL_ECHO_VENDORED_SOURCES} PROPERTIES COMPILE_OPTIONS "/w")
+else()
+    set_source_files_properties(${SPATIAL_ECHO_VENDORED_SOURCES} PROPERTIES COMPILE_OPTIONS "-w")
+endif()
